@@ -5,14 +5,14 @@ orbs:
 jobs: 
   aws-ecr:
     docker:
-      - image: circleci/python:3.7
+      - image: cimg/base:stable
     steps:
       - setup_remote_docker:
           version: 20.10.11
       - aws-ecr/build-and-push-image:
           dockerfile: ./Dockerfile
           repo: black
-          tag: 22.12.0
+          #tag: 22.12.0
 workflows:
   build-and-push-to-ecr:
     jobs:
