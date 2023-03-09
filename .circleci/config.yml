@@ -32,6 +32,7 @@ jobs:
        - aws-ecr/build-and-push-image:
               dockerfile: Dockerfile
               repo: black     
+              tag: 22.12.0
 
 workflows:
   version: 2
@@ -40,3 +41,7 @@ workflows:
      - aws-ecr:
         context: 
           -AWS_ECR_DEMO
+        filters:
+          branches:
+            only:
+              -master  
