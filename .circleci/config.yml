@@ -5,20 +5,31 @@ orbs:
 jobs: 
   aws-ecr:
     docker:
-      - image: circleci/python:3.7  
+      - image: circleci/python:3.9.5
     steps:
        - checkout 
        - setup_remote_docker:
-          version: 20.10.11   
+          version: 20.10.14
+          docker_layer_caching: true
        - run:
            name: Build and tag Docker image
            command: |
-               docker build -t black:22.12.0 -f Dockerfile .
-               docker tag black:22.12.0 148774211651.dkr.ecr.us-east-1.amazonaws.com/black:22.12.0       
+               docker build -t black:22.12.0 -f ./Dockerfile .
+               docker tag black:22.12.0 148774211651.dkr.ecr.us-east-1.amazonaws.com/black:22.12.0
+               
+       - run:
+             name: Login to ECR
+             command: |
+                sudo apt-get update
+                sudo apt-get install -y awscli
+                aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 148774211651.dkr.ecr.us-east-1.amazonaws.com
+       - run:
+             name: Push Docker image to ECR
+             command: docker push 148774211651.dkr.ecr.us-east-1.amazonaws.com/black:22.12.0  
+             
        - aws-ecr/build-and-push-image:
-          dockerfile: Dockerfile
-          repo: mahira
-          tag: 22.12.0,$CIRCLE_SHA1
+              dockerfile: black-22.12.0/Dockerfile
+              repo: black  
 
 workflows:
   version: 2
