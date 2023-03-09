@@ -19,7 +19,4 @@ workflows:
       - aws-ecr:
           context:
             - AWS_ECR_DEMO
-          filters:
-            branches:
-              only:
-                - master
+
