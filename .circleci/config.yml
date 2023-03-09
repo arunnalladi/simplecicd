@@ -5,12 +5,7 @@ orbs:
 jobs: 
   aws-ecr:
     docker:
-      - image: circleci/python:3.7
-   # environment:
-   #   - AWS_ACCESS_KEY_ID: ${AWS_DEV_ACCESS_KEY_ID}
-   #   - AWS_SECRET_ACCESS_KEY: ${AWS_DEV_SECRET_ACCESS_KEY}
-   #   - AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
-  
+      - image: circleci/python:3.7  
     steps:
        - checkout 
        - setup_remote_docker:
@@ -32,7 +27,7 @@ jobs:
        - aws-ecr/build-and-push-image:
               dockerfile: Dockerfile
               repo: black     
-              tag: 22.12.0
+              #tag: 22.12.0
 
 workflows:
   version: 2
@@ -41,7 +36,4 @@ workflows:
      - aws-ecr:
         context: 
           -AWS_ECR_DEMO
-        filters:
-          branches:
-            only:
-              -master  
+
