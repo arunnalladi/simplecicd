@@ -5,18 +5,38 @@ orbs:
 jobs: 
   aws-ecr:
     docker:
-      - image: cimg/base:stable
+      - image: circleci/python:3.7
+   # environment:
+   #   - AWS_ACCESS_KEY_ID: ${AWS_DEV_ACCESS_KEY_ID}
+   #   - AWS_SECRET_ACCESS_KEY: ${AWS_DEV_SECRET_ACCESS_KEY}
+   #   - AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+  
     steps:
-      - setup_remote_docker:
-          version: 20.10.11
-      - aws-ecr/build-and-push-image:
-          dockerfile: Dockerfile
-          repo: black
-          tag: latest
-workflows:
-  build-and-push-to-ecr:
-    jobs:
-      - aws-ecr:
-          context:
-            - AWS_ECR_DEMO
+       - checkout 
+       - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
+       - run:
+           name: Build and tag Docker image
+           command: |
+               docker build -t black:22.12.0  .
+               docker tag black:latest 148774211651.dkr.ecr.us-east-1.amazonaws.com/black:22.12.0
+       - run:
+             name: Login to ECR
+             command: |
+                aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 148774211651.dkr.ecr.us-east-1.amazonaws.com
+       - run:
+             name: Push Docker image to ECR
+             command: docker push 148774211651.dkr.ecr.us-east-1.amazonaws.com/black:22.12.0  
+             
+       - aws-ecr/build-and-push-image:
+              dockerfile: Dockerfile
+              repo: black     
 
+workflows:
+  version: 2
+  master:
+    jobs:
+     - aws-ecr:
+        context: 
+          -AWS_ECR_DEMO
