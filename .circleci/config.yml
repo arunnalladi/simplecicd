@@ -6,21 +6,10 @@ jobs:
   aws-ecr:
     docker:
       - image: circleci/python:3.7  
-    working_directory: /tmp/workspace
-    environment:
-      ENV_FILE: /tmp/workspace/.circleenv
-      DOCKER_BUILDKIT: "1"
-      BUILDKIT_PROGRESS: plain  
     steps:
        - checkout 
        - setup_remote_docker:
           version: 20.10.11   
-       - attach_workspace:
-          at: /tmp/workspace  
-       - run:
-          name: Install dependencies
-          command: |
-            pip install -U pip
        - run:
            name: Build and tag Docker image
            command: |
