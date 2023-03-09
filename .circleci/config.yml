@@ -10,8 +10,6 @@ jobs:
   #    - AWS_DEV_ACCESS_KEY_ID: ${AWS_DEV_ACCESS_KEY_ID}
   #    - AWS_DEV_SECRET_ACCESS_KEY: ${AWS_DEV_SECRET_ACCESS_KEY}
   #    - AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
-  
-    steps:
     steps:
       - setup_remote_docker:
           version: 20.10.11
